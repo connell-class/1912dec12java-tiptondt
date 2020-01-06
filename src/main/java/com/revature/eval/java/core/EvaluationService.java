@@ -1,8 +1,13 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class EvaluationService {
 
@@ -29,10 +34,17 @@ public class EvaluationService {
 	 * @param phrase
 	 * @return
 	 */
-	public String acronym(String phrase) {
+public String acronym(String phrase) {
 		// TODO Write an implementation for this method declaration
-		return null;
+String acro = "";
+acro += phrase.toUpperCase().charAt(0);
+for(int i = 1; i<phrase.length() - 1; i++) {
+	if(phrase.charAt(i-1) == ' ' || phrase.charAt(i - 1) == '-') {
+		acro += phrase.toUpperCase().charAt(i);
 	}
+}
+return acro;
+}
 
 	/**
 	 * 3. Determine if a triangle is equilateral, isosceles, or scalene. An
@@ -82,20 +94,32 @@ public class EvaluationService {
 		public void setSideThree(double sideThree) {
 			this.sideThree = sideThree;
 		}
-
 		public boolean isEquilateral() {
 			// TODO Write an implementation for this method declaration
+			if(sideOne == sideTwo && sideTwo==sideThree && sideOne==sideThree) {
+			return true;	
+			}
+			else
 			return false;
+		//evaluates correct
 		}
 
 		public boolean isIsosceles() {
 			// TODO Write an implementation for this method declaration
-			return false;
+			if (sideOne == sideTwo && sideOne != sideThree) {return true;}
+			if(sideOne == sideThree && sideOne !=sideTwo) {return true;}
+			if(sideTwo == sideThree && sideTwo !=sideOne) {return true;}
+			else {return false;}
+		//evaluated correct
 		}
 
 		public boolean isScalene() {
 			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne != sideTwo && sideOne != sideThree) {return true;}
+			if(sideTwo != sideOne && sideTwo !=sideThree) {return true;}
+			if(sideThree != sideOne && sideThree != sideTwo) {return true;}
+			else{return false;}
+		//evaluated correct
 		}
 
 	}
@@ -113,13 +137,28 @@ public class EvaluationService {
 	 * 3 + 2*1 + 2*3 + 2 + 1 = 3 + 2 + 6 + 3 = 5 + 9 = 14
 	 * 
 	 * @param string
+	 * @param CharSquence 
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
 		// TODO Write an implementation for this method declaration
-		return 0;
-	}
+					String str = string.toUpperCase();
+					String letters[] = {"AEIOULNRST", "DG", "BCMP", "FHVWY","K","JX","QZ"};
+					int score[] = {1,2,3,4,5,8,10};
+					int finalscore = 0;
+					for(int i = 0; i < str.length(); i++) {
+						char l = str.charAt(i);
+						for(int j = 0; j < letters.length;j++) {
+						for(int k = 0; k < letters[j].length();k++) {
+							if(letters[j].charAt(k) == l) {
+								finalscore += score[j];
+							}
+						}
+					}
+				}
+			return finalscore;
 
+	}
 	/**
 	 * 5. Clean up user-entered phone numbers so that they can be sent SMS messages.
 	 * 
@@ -153,8 +192,27 @@ public class EvaluationService {
 	 */
 	public String cleanPhoneNumber(String string) {
 		// TODO Write an implementation for this method declaration
-		return null;
+		
+		String text = "abc";
+		String result = string.replaceAll("[^0-9]", "");
+		if(result.length() == 11 && result.startsWith("1")) {
+			result = result.substring(1);
+		}
+		if(result.length() == 10) {
+			return result;
+		}
+		if (result.length() > 10) {
+			throw new IllegalArgumentException();
+		}
+		if (Pattern.matches("[a-zA-Z,]+" , text)) {
+			throw new IllegalArgumentException();
+		}
+		if(Pattern.matches("[a-zA-Z]+",text)){
+			throw new IllegalArgumentException();
+		}
+		return "0000000000";
 	}
+
 
 	/**
 	 * 6. Given a phrase, count the occurrences of each word in that phrase.
@@ -167,7 +225,9 @@ public class EvaluationService {
 	 */
 	public Map<String, Integer> wordCount(String string) {
 		// TODO Write an implementation for this method declaration
-		return null;
+		
+		
+		
 	}
 
 	/**
@@ -210,7 +270,7 @@ public class EvaluationService {
 
 		public int indexOf(T t) {
 			// TODO Write an implementation for this method declaration
-			return 0;
+			return sortedList.indexOf(t);
 		}
 
 		public BinarySearch(List<T> sortedList) {
@@ -246,9 +306,25 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
-	}
+		// TODO Write an implementation for this method declaration		
+		if(string.charAt(0) == 'a') {
+			string = string.concat("ay");
+			string = string.trim();
+			}
+		//If a word begins with a consonant sound, move it to the end
+		//of the word, and then add an "ay" sound to the end of the word
+		else if(string.charAt(0) == 't' && string.charAt(1) == 'h') {
+			char temp = string.charAt(0);
+			char temp2 = string.charAt(1);
+			string = string.replace(string.charAt(0), ' ').replace(string.charAt(1), ' ');
+			string = string + temp + temp2;
+			string = string.concat("ay");
+			string = string.trim();
+			}
+		
+		return string;
+		}
+
 
 	/**
 	 * 9. An Armstrong number is a number that is the sum of its own digits each
@@ -267,8 +343,24 @@ public class EvaluationService {
 	 */
 	public boolean isArmstrongNumber(int input) {
 		// TODO Write an implementation for this method declaration
-		return false;
+		int temp = input;
+		int arNum = 0;
+		int digits = 0;
+		while (temp > 0) {
+			temp = temp / 10;
+			digits += 1;
+		}
+		String strDigit = "" + input;
+		temp = input;
+		int digitCount = digits;
+		while(digitCount > 0) {
+			int num = Character.getNumericValue(strDigit.charAt(digits-digitCount));
+			arNum += Math.pow(num, digits);
+			--digitCount;
+		}
+		return (input == arNum);			
 	}
+
 
 	/**
 	 * 10. Compute the prime factors of a given natural number.
@@ -280,11 +372,22 @@ public class EvaluationService {
 	 * @param l
 	 * @return
 	 */
-	public List<Long> calculatePrimeFactorsOf(long l) {
+	public boolean calculatePrimeFactorsOf(long l) {
 		// TODO Write an implementation for this method declaration
-		return null;
-	}
-
+		
+		if(l == 2 || l ==3) {
+			return true;
+			}
+		boolean isPrime;
+		for(int i = 2; i<l; i++) {
+			if(l%i != 0) {
+				return isPrime = true;
+				break;
+				}
+			}
+		return false;
+}
+	
 	/**
 	 * 11. Create an implementation of the rotational cipher, also sometimes called
 	 * the Caesar cipher.
@@ -322,7 +425,7 @@ public class EvaluationService {
 		public String rotate(String string) {
 			// TODO Write an implementation for this method declaration
 			return null;
-		}
+		
 
 	}
 
@@ -376,8 +479,11 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String encode(String string) {
+			return string;
 			// TODO Write an implementation for this method declaration
-			return null;
+
+			
+			
 		}
 
 		/**
@@ -433,8 +539,9 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
 		return false;
+		// TODO Write an implementation for this method declaration
+
 	}
 
 	/**
@@ -465,7 +572,14 @@ public class EvaluationService {
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
 		// TODO Write an implementation for this method declaration
-		return 0;
+		int total = 0;
+		for(int x = 2; x<set.length; x++) {
+			if(i%x == 0 && x != i) {
+				
+			}
+		}
+		
+		return total;
 	}
 
 	/**
@@ -506,6 +620,12 @@ public class EvaluationService {
 	 */
 	public boolean isLuhnValid(String string) {
 		// TODO Write an implementation for this method declaration
+		if(string.length()<1) {return false;}
+		
+		if(string.contains(" ")) {string.replaceAll(" ", "");}
+		string.replaceAll("\\D", "");
+		
+		
 		return false;
 	}
 
@@ -536,9 +656,11 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
-	public int solveWordProblem(String string) {
+	public String solveWordProblem(String string) {
 		// TODO Write an implementation for this method declaration
-		return 0;
+		
+		String total1 = "2";
+		return total1;
+	
 	}
-
 }
